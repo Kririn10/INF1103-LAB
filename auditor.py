@@ -7,7 +7,7 @@ print("Type 'quit' to exit\n")
 while True:
     inputs = input ("Enter Stock Quantity: ")
 
-    if input == "quit":
+    if inputs == "quit":
         break
 
     if not inputs.isdigit():
