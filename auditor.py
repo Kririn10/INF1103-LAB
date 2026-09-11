@@ -1,29 +1,29 @@
-total_inventory = 0
-failed_entries = 0
+inventory = 0
+failed = 0
 
-print("SMART INVENTORY AUDITOR")
+print("Smart Inventory Auditor")
 print("Type 'quit' to exit\n")
 
 while True:
-    user_input = input ("Enter Stock Quantity: ")
+    inputs = input ("Enter Stock Quantity: ")
 
-    if user_input == "quit":
+    if input == "quit":
         break
 
-    if not user_input.isdigit():
+    if not inputs.isdigit():
         print("Invalid input. Please enter a valid number.")
-        failed_entries += 1
+        failed += 1
         continue
 
-    stock_quantity = int(user_input)
-    total_inventory += stock_quantity
-    print(f"✓ Total: {total_inventory} units\n")
+    stock_quantity = int(inputs)
+    inventory += stock_quantity
+    print(f"Total: {inventory} units\n")
 
-    if total_inventory > 500:
-        print(" Warning: Inventory exceeds 500 units. Please review stock levels.\n")
+    if inventory > 500:
+        print("Inventory exceeds 500 units. Please review stock levels.\n")
         break
 
     print("\n" + "="*40)
-    print(f"Total Units: {total_inventory}")
-    print(f"Failed Entries: {failed_entries}")
+    print(f"Total Units: {inventory}")
+    print(f"Failed Entries: {failed}")
     print("="*40)
