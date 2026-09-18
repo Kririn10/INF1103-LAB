@@ -31,6 +31,13 @@ def main():
     print("Type 'quit' to exit\n")
 
 
+    while True: 
+        delivery = get_valid_input() 
+        if delivery == "quit":
+            break
+        if delivery is None:
+            failed +=1
+            continue
     
         inventory = process_delivery(int(inventory), int(delivery))
         tax = calculate_tax(delivery)
