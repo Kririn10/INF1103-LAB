@@ -1,6 +1,7 @@
 import os
 import copy
 
+
 def load_inventory():
     if  os.path.exists("inventory.txt"):
         with open("inventory.txt","r") as file:
@@ -22,7 +23,16 @@ def load_inventory():
            pass
        return 0, []
    
+def save_inventory(total, history):
+    with open("inventory.txt", "w") as file:
+        # Line 0: write the final total units
+        file.write(f"{total}\n")
 
+        # Remaining lines: write each transaction from history
+        for item in history:
+            file.write(f"{item}\n")
+
+    print("Inventory successfully saved to inventory.txt.")
         
     
     
@@ -78,6 +88,7 @@ def main():
             break
         
     generate_report(inventory, failed)
+    save_inventory(inventory,history)
     print(f"[DEBUG] Final Recorded History: {history}")
     print(f"[DEBUG] Total Transactions Logged: {len(history)}")
 
