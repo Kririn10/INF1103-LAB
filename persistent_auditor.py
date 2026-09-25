@@ -67,6 +67,8 @@ def main():
     
         inventory = process_delivery(int(inventory), int(delivery))
         tax = calculate_tax(delivery)
+        history.append(delivery)
+        print(f"[DEBUG] Current History: {history}")
     
         print(f"Tax for this delivery: {tax:.2f}")
         print(f"Total: {inventory} units\n")
@@ -76,6 +78,9 @@ def main():
             break
         
     generate_report(inventory, failed)
+    print(f"[DEBUG] Final Recorded History: {history}")
+    print(f"[DEBUG] Total Transactions Logged: {len(history)}")
+
 
 if __name__ == "__main__":
     main()
