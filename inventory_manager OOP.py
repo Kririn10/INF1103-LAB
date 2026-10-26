@@ -69,7 +69,6 @@ class Inventory:
     def get_all_products(self) -> dict:
         return self._products
 
-
 def load_inventory() -> Inventory:
     inventory = Inventory()
 
@@ -148,7 +147,6 @@ def prompt_update_stock(inventory: Inventory) -> None:
         print("Stock updated successfully!\n")
     except ValueError:
         print("Invalid number. Stock not updated.\n")
-
 
 def prompt_search_product(inventory: Inventory) -> None:
     print("\nSearch Product")
