@@ -13,7 +13,6 @@ def load_inventory():
         except (json.JSONDecodeError, IOError):
             print("Error loading inventory file. Starting with default inventory.\n")
 
-    # Initial default dataset if file doesn't exist
     return {
         "P001": {"name": "Laptop", "price": 1200.00, "stock": 15},
         "P002": {"name": "Mouse", "price": 25.50, "stock": 40},
@@ -31,7 +30,6 @@ def save_inventory(inventory):
         print(f"Failed to save inventory: {e}\n")
 
 def display_all(inventory):
-    """Displays all products formatted in the catalog."""
     if not inventory:
         print("Inventory is currently empty.\n")
         return
