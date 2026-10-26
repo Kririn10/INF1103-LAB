@@ -130,7 +130,6 @@ def prompt_add_product(inventory: Inventory) -> None:
     if inventory.add_product(product):
         print("Product added successfully!\n")
 
-
 def prompt_update_stock(inventory: Inventory) -> None:
     print("\nUpdate Stock")
     pid = input("Enter Product ID: ").strip()
@@ -160,7 +159,6 @@ def prompt_search_product(inventory: Inventory) -> None:
         print("-" * 40 + "\n")
     else:
         print("Product not found.\n")
-
 
 def main():
     print("=" * 30)
