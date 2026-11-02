@@ -1,11 +1,15 @@
+from abc import ABC, abstractmethod
 import json
 import os
 
 FILENAME = "inventory.json"
 
+class CanBeShipped(ABC):
+    @abstractmethod
+    def calculate_shipping_cost(self) -> float:
+        pass
 
-class Product:
-
+class Product(ABC):
     def __init__(self, product_id: str, name: str, price: float, stock: int):
         self._product_id = product_id
         self.name = name
@@ -31,15 +35,15 @@ class Product:
         self._stock = quantity
 
     def display_information(self) -> None:
-        print(f"ID: {self._product_id} | Name: {self.name} | Price: ${self._price:.2f} | Stock: {self._stock}")
+        print(f"ID: {self._product_id} | Name: {self.name} | Price: ${self._price:.2f} | Stock: {self._stock}", end="")
 
+    @abstractmethod
+    def get_fulfilment_info(self) -> str:
+        pass
+
+    @abstractmethod
     def to_dict(self) -> dict:
-        return {
-            "name": self.name,
-            "price": self._price,
-            "stock": self._stock
-        }
-
+        pass
 
 class Inventory:
 
