@@ -192,6 +192,15 @@ def save_inventory(inventory: Inventory) -> None:
 
 def prompt_add_product(inventory: Inventory) -> None:
     print("\nAdd New Product")
+    print("Select Product Type:")
+    print("1. Physical Product")
+    print("2. Digital Product")
+    p_type = input("Choice (1/2): ").strip()
+
+    if p_type not in ("1", "2"):
+        print("Invalid product type. Operation aborted.\n")
+        return
+
     pid = input("Product ID: ").strip()
     if inventory.search_product(pid):
         print("A product with this ID already exists!\n")
@@ -201,11 +210,17 @@ def prompt_add_product(inventory: Inventory) -> None:
     try:
         price = float(input("Price: ").strip())
         stock = int(input("Stock Quantity: ").strip())
-    except ValueError:
-        print("Invalid price or stock quantity. Operation aborted.\n")
-        return
 
-    product = Product(pid, name, price, stock)
+        if p_type == "1":
+            weight = float(input("Weight (kg): ").strip())
+            product = PhysicalProduct(pid, name, price, stock, weight)
+        else:
+            download_size = float(input("Download Size (MB): ").strip())
+            product = DigitalProduct(pid, name, price, stock, download_size)
+
+    except ValueError:
+        print("Invalid numerical input. Operation aborted.\n")
+        return
     if inventory.add_product(product):
         print("Product added successfully!\n")
 
