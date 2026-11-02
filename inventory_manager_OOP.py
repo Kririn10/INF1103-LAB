@@ -45,10 +45,69 @@ class Product(ABC):
     def to_dict(self) -> dict:
         pass
 
+class PhysicalProduct(Product, CanBeShipped):
+
+    def __init__(self, product_id: str, name: str, price: float, stock: int, weight: float):
+        super().__init__(product_id, name, price, stock)
+        self._weight = float(weight)
+
+    @property
+    def weight(self) -> float:
+        return self._weight
+
+    def calculate_shipping_cost(self) -> float:
+        # Example shipping rule: Flat base fee of $5.00 + $2.50 per kg
+        return 5.00 + (self._weight * 2.50)
+
+    def get_fulfilment_info(self) -> str:
+        return f"Physical shipping required. Shipping cost: ${self.calculate_shipping_cost():.2f}"
+
+    def display_information(self) -> None:
+        super().display_information()
+        print(f" | Weight: {self._weight:.2f} kg | Shipping: ${self.calculate_shipping_cost():.2f}")
+
+    def to_dict(self) -> dict:
+        return {
+            "type": "physical",
+            "name": self.name,
+            "price": self._price,
+            "stock": self._stock,
+            "weight": self._weight
+        }
+
+
+class DigitalProduct(Product):
+
+    def __init__(self, product_id: str, name: str, price: float, stock: int, download_size: float):
+        super().__init__(product_id, name, price, stock)
+        self._download_size = float(download_size)
+
+    @property
+    def download_size(self) -> float:
+        return self._download_size
+
+    def get_fulfilment_info(self) -> str:
+        return f"Delivered digitally via download link ({self._download_size:.2f} MB)."
+
+    def display_information(self) -> None:
+        super().display_information()
+        print(f" | Download Size: {self._download_size:.2f} MB | Fulfilment: Delivered digitally")
+
+    def to_dict(self) -> dict:
+        return {
+            "type": "digital",
+            "name": self.name,
+            "price": self._price,
+            "stock": self._stock,
+            "download_size": self._download_size
+        }
+
+
+
 class Inventory:
 
     def __init__(self):
-        self._products = {}
+        self._products: dict[str, Product] = {}
 
     def add_product(self, product: Product) -> bool:
         if product.product_id in self._products:
@@ -70,7 +129,7 @@ class Inventory:
             product.display_information()
         print()
 
-    def get_all_products(self) -> dict:
+    def get_all_products(self) -> dict[str, Product]:
         return self._products
 
 def load_inventory() -> Inventory:
@@ -83,16 +142,32 @@ def load_inventory() -> Inventory:
                 print("inventory.json found.")
                 print("Inventory loaded successfully.\n")
                 for pid, details in data.items():
-                    product = Product(pid, details["name"], details["price"], details["stock"])
+                    prod_type = details.get("type", "physical")
+                    if prod_type == "digital":
+                        product = DigitalProduct(
+                            pid,
+                            details["name"],
+                            details["price"],
+                            details["stock"],
+                            details["download_size"]
+                        )
+                    else:
+                        product = PhysicalProduct(
+                            pid,
+                            details["name"],
+                            details["price"],
+                            details["stock"],
+                            details.get("weight", 1.0)
+                        )
                     inventory.add_product(product)
                 return inventory
         except (json.JSONDecodeError, IOError):
             print("Error loading inventory file. Starting with default inventory.\n")
 
     defaults = [
-        Product("P001", "Laptop", 1200.00, 15),
-        Product("P002", "Mouse", 25.50, 40),
-        Product("P003", "Keyboard", 45.00, 25),
+        PhysicalProduct("P001", "Laptop", 1200.00, 15, 2.3),
+        PhysicalProduct("P002", "Mouse", 25.50, 40, 0.15),
+        DigitalProduct("P003", "Antivirus Suite", 45.00, 100, 350.0),
     ]
     for p in defaults:
         inventory.add_product(p)
