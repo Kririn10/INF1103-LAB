@@ -5,7 +5,6 @@ from supplier import Supplier
 
 
 class Inventory:
-    """Aggregates a collection of Product objects."""
 
     def __init__(self) -> None:
         self.products: list[Product] = []

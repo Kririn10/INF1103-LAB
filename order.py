@@ -3,7 +3,6 @@ from order_line import OrderLine
 
 
 class Order:
-    """Manages order lines via composition."""
 
     def __init__(self, order_id: str) -> None:
         self.order_id: str = order_id

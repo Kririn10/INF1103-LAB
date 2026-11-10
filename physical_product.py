@@ -4,7 +4,6 @@ from supplier import Supplier
 
 
 class PhysicalProduct(Product, CanBeShipped):
-    """Tangible product requiring physical shipping."""
 
     def __init__(self, product_id: str, name: str, price: float, stock: int, weight: float, supplier: Supplier) -> None:
         super().__init__(product_id, name, price, stock, supplier)

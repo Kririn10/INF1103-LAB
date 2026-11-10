@@ -2,8 +2,6 @@ from product import Product
 
 
 class OrderLine:
-    """Represents one product and quantity inside an order (Composition part of Order)."""
-
     def __init__(self, product: Product, quantity: int) -> None:
         self.product: Product = product
         self.quantity: int = int(quantity)

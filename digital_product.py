@@ -3,8 +3,6 @@ from supplier import Supplier
 
 
 class DigitalProduct(Product):
-    """Intangible product delivered digitally."""
-
     def __init__(self, product_id: str, name: str, price: float, stock: int, download_size: float, supplier: Supplier) -> None:
         super().__init__(product_id, name, price, stock, supplier)
         self._download_size: float = float(download_size)

@@ -9,7 +9,6 @@ FILENAME = "inventory.json"
 
 
 def show_product_details(product: Product) -> None:
-    """LSP and Polymorphism test helper function (Section 6.2 & 7.1)."""
     product.display_information()
     print(f"Fulfilment Details: {product.get_fulfilment_info()}")
 

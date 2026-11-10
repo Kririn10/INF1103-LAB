@@ -1,5 +1,4 @@
 class Supplier:
-    """Represents a product supplier (Association with Product)."""
 
     def __init__(self, supplier_id: str, name: str, contact_email: str) -> None:
         self.supplier_id: str = supplier_id
