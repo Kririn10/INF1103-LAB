@@ -1,12 +1,13 @@
 import json
 import os
 from product import Product
+from supplier import Supplier
 
 
 class Inventory:
+    """Aggregates a collection of Product objects."""
 
     def __init__(self) -> None:
-        # Lab 8 Section 3: Collection typed using the base class Product
         self.products: list[Product] = []
 
     def add_product(self, product: Product) -> bool:
@@ -29,15 +30,12 @@ class Inventory:
                 return product
         return None
 
-    def search_product(self, product_id: str) -> Product | None:
-        return self.find_product(product_id)
-
     def display_all(self) -> None:
         if not self.products:
             print("Inventory is currently empty.\n")
             return
 
-        print("\nCurrent Inventory")
+        print("\nCurrent Inventory:")
         for product in self.products:
             product.display_information()
         print()
@@ -59,6 +57,8 @@ class Inventory:
         from physical_product import PhysicalProduct
         from digital_product import DigitalProduct
 
+        default_supplier = Supplier("SUP01", "Global Tech Supplies", "orders@globaltech.com")
+
         if os.path.exists(filename):
             try:
                 with open(filename, "r") as file:
@@ -67,6 +67,16 @@ class Inventory:
                     print("Inventory loaded successfully.\n")
                     self.products.clear()
                     for pid, details in data.items():
+                        supp_data = details.get("supplier")
+                        if supp_data and isinstance(supp_data, dict):
+                            prod_supplier = Supplier(
+                                supp_data.get("supplier_id", "SUP01"),
+                                supp_data.get("name", "Global Tech Supplies"),
+                                supp_data.get("contact_email", "orders@globaltech.com")
+                            )
+                        else:
+                            prod_supplier = default_supplier
+
                         prod_type = details.get("type", "physical")
                         if prod_type == "digital":
                             product = DigitalProduct(
@@ -74,7 +84,8 @@ class Inventory:
                                 details["name"],
                                 details["price"],
                                 details["stock"],
-                                details["download_size"]
+                                details.get("download_size", 100.0),
+                                prod_supplier
                             )
                         else:
                             product = PhysicalProduct(
@@ -82,19 +93,20 @@ class Inventory:
                                 details["name"],
                                 details["price"],
                                 details["stock"],
-                                details.get("weight", 1.0)
+                                details.get("weight", 1.0),
+                                prod_supplier
                             )
-                        self.add_product(product)  
+                        self.add_product(product)
                     return
             except (json.JSONDecodeError, IOError):
-                print(f"Error loading {filename}. Starting with default inventory.\n")
+                print(f"Error loading {filename}. Loading defaults.\n")
 
-        # Fallback defaults if file does not exist or fails to load
-        defaults = [
-            PhysicalProduct("P001", "Laptop", 1200.00, 15, 2.3),
-            PhysicalProduct("P002", "Mouse", 25.50, 40, 0.15),
-            DigitalProduct("P003", "Antivirus Suite", 45.00, 100, 350.0),
-        ]
+        # Fallback defaults
         self.products.clear()
+        defaults = [
+            PhysicalProduct("P001", "Laptop", 1200.00, 15, 2.3, default_supplier),
+            PhysicalProduct("P002", "Mouse", 25.50, 40, 0.15, default_supplier),
+            DigitalProduct("P003", "Antivirus Suite", 45.00, 100, 350.0, default_supplier),
+        ]
         for p in defaults:
             self.add_product(p)

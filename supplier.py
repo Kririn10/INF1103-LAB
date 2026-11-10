@@ -1,9 +1,17 @@
-class supplier():
-    def __init__(self,supplier_id: str, name: str,contact_email: str):
-            self.name =name
-            self.supplier_id = supplier_id
-            self.contact_email = contact_email
-            
-            
-            
-        
+class Supplier:
+    """Represents a product supplier (Association with Product)."""
+
+    def __init__(self, supplier_id: str, name: str, contact_email: str) -> None:
+        self.supplier_id: str = supplier_id
+        self.name: str = name
+        self.contact_email: str = contact_email
+
+    def display_information(self) -> None:
+        print(f"Supplier ID: {self.supplier_id} | Name: {self.name} | Contact: {self.contact_email}")
+
+    def to_dict(self) -> dict:
+        return {
+            "supplier_id": self.supplier_id,
+            "name": self.name,
+            "contact_email": self.contact_email
+        }

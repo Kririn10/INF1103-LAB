@@ -1,17 +1,16 @@
 from abc import ABC, abstractmethod
-from supplier import supplier
-
+from supplier import Supplier
 
 
 class Product(ABC):
+    """Abstract base class representing common product attributes and behaviors."""
 
-    def __init__(self, product_id: str, name: str, price: float, stock: int, supplier: supplier):
-        self._product_id = product_id
-        self.name = name
-        self._price = float(price)
-        self._stock = int(stock)
-        self.suppllier = supplier
-        
+    def __init__(self, product_id: str, name: str, price: float, stock: int, supplier: Supplier) -> None:
+        self._product_id: str = product_id
+        self.name: str = name
+        self._price: float = float(price)
+        self._stock: int = int(stock)
+        self._supplier: Supplier = supplier
 
     @property
     def product_id(self) -> str:
@@ -24,10 +23,10 @@ class Product(ABC):
     @property
     def stock(self) -> int:
         return self._stock
-    
+
     @property
-    def supplier(self) -> supplier:
-        return self.supplier
+    def supplier(self) -> Supplier:
+        return self._supplier
 
     def update_stock(self, quantity: int) -> None:
         if quantity < 0:
@@ -36,12 +35,19 @@ class Product(ABC):
         self._stock = quantity
 
     def display_information(self) -> None:
-        print(f"ID: {self._product_id} | Name: {self.name} | Price: ${self._price:.2f} | Stock: {self._stock}", end="")
+        """Display base product details and supplier info."""
+        print(
+            f"ID: {self._product_id} | Name: {self.name} | Price: ${self._price:.2f} | "
+            f"Stock: {self._stock} | Supplier: {self._supplier.name} ({self._supplier.contact_email})",
+            end=""
+        )
 
     @abstractmethod
     def get_fulfilment_info(self) -> str:
+        """Return fulfillment details."""
         pass
 
     @abstractmethod
     def to_dict(self) -> dict:
+        """Serialize product data to dictionary."""
         pass
