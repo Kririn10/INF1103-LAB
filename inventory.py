@@ -1,6 +1,7 @@
 import json
 import os
 from product import Product
+from product_factory import ProductFactory
 from supplier import Supplier
 
 
@@ -42,8 +43,7 @@ class Inventory:
     def save_to_file(self, filename: str = "inventory.json") -> None:
         print("Saving inventory...")
         data = {
-            product.product_id: product.to_dict()
-            for product in self.products
+            product.product_id: product.to_dict() for product in self.products
         }
         try:
             with open(filename, "w") as file:
@@ -53,10 +53,9 @@ class Inventory:
             print(f"Failed to save inventory: {e}\n")
 
     def load_from_file(self, filename: str = "inventory.json") -> None:
-        from physical_product import PhysicalProduct
-        from digital_product import DigitalProduct
-
-        default_supplier = Supplier("SUP01", "Global Tech Supplies", "orders@globaltech.com")
+        default_supplier = Supplier(
+            "SUP01", "Global Tech Supplies", "orders@globaltech.com"
+        )
 
         if os.path.exists(filename):
             try:
@@ -71,41 +70,47 @@ class Inventory:
                             prod_supplier = Supplier(
                                 supp_data.get("supplier_id", "SUP01"),
                                 supp_data.get("name", "Global Tech Supplies"),
-                                supp_data.get("contact_email", "orders@globaltech.com")
+                                supp_data.get(
+                                    "contact_email", "orders@globaltech.com"
+                                ),
                             )
                         else:
                             prod_supplier = default_supplier
 
                         prod_type = details.get("type", "physical")
-                        if prod_type == "digital":
-                            product = DigitalProduct(
-                                pid,
-                                details["name"],
-                                details["price"],
-                                details["stock"],
-                                details.get("download_size", 100.0),
-                                prod_supplier
-                            )
-                        else:
-                            product = PhysicalProduct(
-                                pid,
-                                details["name"],
-                                details["price"],
-                                details["stock"],
-                                details.get("weight", 1.0),
-                                prod_supplier
-                            )
+                        product = ProductFactory.create(
+                            prod_type,
+                            pid,
+                            details["name"],
+                            details["price"],
+                            details["stock"],
+                            prod_supplier,
+                            weight=details.get("weight", 1.0),
+                            download_size=details.get("download_size", 100.0),
+                        )
                         self.add_product(product)
                     return
-            except (json.JSONDecodeError, IOError):
+            except (json.JSONDecodeError, IOError, ValueError):
                 print(f"Error loading {filename}. Loading defaults.\n")
 
-        # Fallback defaults
+        # Fallback defaults created via ProductFactory
         self.products.clear()
         defaults = [
-            PhysicalProduct("P001", "Laptop", 1200.00, 15, 2.3, default_supplier),
-            PhysicalProduct("P002", "Mouse", 25.50, 40, 0.15, default_supplier),
-            DigitalProduct("P003", "Antivirus Suite", 45.00, 100, 350.0, default_supplier),
+            ProductFactory.create(
+                "physical", "P001", "Laptop", 1200.00, 15, default_supplier, weight=2.3
+            ),
+            ProductFactory.create(
+                "physical", "P002", "Mouse", 25.50, 40, default_supplier, weight=0.15
+            ),
+            ProductFactory.create(
+                "digital",
+                "P003",
+                "Antivirus Suite",
+                45.00,
+                100,
+                default_supplier,
+                download_size=350.0,
+            ),
         ]
         for p in defaults:
             self.add_product(p)
