@@ -42,10 +42,8 @@ class Product(ABC):
 
     @abstractmethod
     def get_fulfilment_info(self) -> str:
-        """Return fulfillment details."""
         pass
 
     @abstractmethod
     def to_dict(self) -> dict:
-        """Serialize product data to dictionary."""
         pass

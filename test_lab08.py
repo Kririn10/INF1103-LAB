@@ -35,7 +35,7 @@ def main() -> None:
     print("Supplier deleted from local scope. Verifying Product still holds reference:")
     print(f"Supplier Name via Product: {laptop.supplier.name} ({laptop.supplier.contact_email})")
 
-    # 2. Aggregation: Inventory and Product
+    # 2. Aggregation
     print("\n--- 2. Testing Aggregation (Inventory & Product) ---")
     inv_a = Inventory()
     inv_b = Inventory()
@@ -44,7 +44,6 @@ def main() -> None:
     inv_a.add_product(ebook)
     print(f"Inventory A count: {len(inv_a.products)}")
 
-    # Remove laptop from Inventory A and transfer to Inventory B
     removed_product = inv_a.remove_product("P001")
     print(f"Removed '{removed_product.name}' from Inventory A. Inventory A count: {len(inv_a.products)}")
     print(f"Confirming product still alive outside inventory: {removed_product.name} (Stock: {removed_product.stock})")
@@ -52,7 +51,7 @@ def main() -> None:
     inv_b.add_product(removed_product)
     print(f"Added to Inventory B. Inventory B count: {len(inv_b.products)}")
 
-    # 3. Composition: Order and OrderLine
+    # 3. Composition
     print("\n--- 3. Testing Composition (Order & OrderLine) ---")
     order1 = Order("ORD-101")
     order2 = Order("ORD-102")
@@ -69,7 +68,7 @@ def main() -> None:
     order1.display_order_summary()
     order2.display_order_summary()
 
-    # 4. Polymorphism & Liskov Substitution Principle (LSP)
+    # 4. Polymorphism
     print("--- 4. Testing LSP & Polymorphism via Product Reference ---")
     catalog: list[Product] = [laptop, ebook]
     for item in catalog:

@@ -9,7 +9,6 @@ class Order:
         self.order_lines: list[OrderLine] = []
 
     def add_order_line(self, product: Product, quantity: int) -> None:
-        """Creates OrderLine internally to enforce composition lifecycle ownership."""
         order_line = OrderLine(product, quantity)
         self.order_lines.append(order_line)
 
